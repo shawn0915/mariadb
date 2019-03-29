@@ -89,9 +89,9 @@ RUN set -ex; \
 	apt-key list
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
-ENV MARIADB_MAJOR 10.1
-ENV MARIADB_VERSION 1:10.1.38+maria-1~bionic
-# release-status:Stable
+ENV MARIADB_MAJOR 10.4
+ENV MARIADB_VERSION 1:10.4.3+maria~bionic
+# release-status:RC
 # (https://downloads.mariadb.org/mariadb/+releases/)
 
 RUN set -e;\
@@ -111,7 +111,7 @@ RUN set -ex; \
 		echo "mariadb-server-$MARIADB_MAJOR" mysql-server/root_password password 'unused'; \
 		echo "mariadb-server-$MARIADB_MAJOR" mysql-server/root_password_again password 'unused'; \
 	} | debconf-set-selections; \
-	backupPackage='mariadb-backup-10.1'; \
+	backupPackage='mariadb-backup'; \
 	apt-get update; \
 	apt-get install -y \
 		"mariadb-server=$MARIADB_VERSION" \

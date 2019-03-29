@@ -35,7 +35,7 @@ RUN set -ex; \
 	\
 # verify the signature
 	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
+	gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
 	gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
 	command -v gpgconf > /dev/null && gpgconf --kill all || :; \
 	rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc; \
@@ -81,16 +81,18 @@ ENV GPG_KEYS \
 RUN set -ex; \
 	export GNUPGHOME="$(mktemp -d)"; \
 	for key in $GPG_KEYS; do \
-		gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+		gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 	done; \
-	gpg --export $GPG_KEYS > /etc/apt/trusted.gpg.d/mariadb.gpg; \
+	gpg --batch --export $GPG_KEYS > /etc/apt/trusted.gpg.d/mariadb.gpg; \
 	command -v gpgconf > /dev/null && gpgconf --kill all || :; \
 	rm -r "$GNUPGHOME"; \
 	apt-key list
 
 # bashbrew-architectures: amd64 arm64v8 i386 ppc64le
 ENV MARIADB_MAJOR 10.0
-ENV MARIADB_VERSION 10.0.36+maria-1~xenial
+ENV MARIADB_VERSION 10.0.38+maria-1~xenial
+# release-status:Stable
+# (https://downloads.mariadb.org/mariadb/+releases/)
 
 RUN set -e;\
 	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/ubuntu xenial main" > /etc/apt/sources.list.d/mariadb.list; \
